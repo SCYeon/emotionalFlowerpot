@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "746954171450",
+    "project_id": "dschackathon-uni-4ff7a",
+    "storage_bucket": "dschackathon-uni-4ff7a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:746954171450:android:cf05545b3d03205bf10103",
+        "android_client_info": {
+          "package_name": "com.example.emotionalflowerpot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "746954171450-r4kae8sh2idj48j6sdskm1116cdgb6am.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgnrL3jsHUCjjEvA07UC3l-8KPi1XjYbw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "746954171450-r4kae8sh2idj48j6sdskm1116cdgb6am.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
