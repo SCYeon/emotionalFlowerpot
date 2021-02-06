@@ -2,6 +2,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+//본 페이지는 날짜 카운트 확인과 그로인한 꽃의 개화가 확인 불가하여 임의의 값을 넣어 진행함.
+
 Random random = new Random();
 var randomColor;
 var randomFlower;
@@ -67,7 +69,7 @@ List<String> flowerList = [
 var flowerListCount = 0;
 
 Widget checkRandom(int i)  {
-  if (index1.contains(i)) {
+  if (index1.contains(i) && flowerListCount < count) {
     return Image.asset(flowerList[index2[flowerListCount++]]);
   } else
     return Image.asset('assets/flowerone4.png');
@@ -76,59 +78,52 @@ Widget checkRandom(int i)  {
 List<int> index2 = List<int>(count);
 List<int> index1 = List<int>(count);
 // ignore: missing_return
-Future<Widget> forCountL() {
+Widget forCountL() {
+  flowerListCount = 0;
   flowerColorCount flower = flowerColorCount(4, 6, 3, 5, 7);
 
-    count = flower.redCount +
-        flower.purpleCount +
-        flower.greenCount +
-        flower.yellowCount +
-        flower.blueCount;
+  count = flower.redCount +
+      flower.purpleCount +
+      flower.greenCount +
+      flower.yellowCount +
+      flower.blueCount;
 
-    var i = 0;
-    var randomNumber1 = 0;
+  var randomNumber1 = 0;
+
+  for (int i = 0; i < count; i++) {
+    randomNumber1 = random.nextInt(60);
     while (true) {
-      if (notIndex.contains(randomNumber1))
+      if (notIndex.contains(randomNumber1) || index1.contains(randomNumber1))
         randomNumber1 = random.nextInt(60);
       else {
-        index1[i++] = randomNumber1;
+        index1[i] = randomNumber1;
         break;
       }
     }
-    for (; i < count; i++) {
-      randomNumber1 = random.nextInt(60);
-      while (true) {
-        if (notIndex.contains(randomNumber1) || index1.contains(randomNumber1))
-          randomNumber1 = random.nextInt(60);
-        else {
-          index1[i] = randomNumber1;
-          break;
-        }
-      }
-    }
-    index1.sort();
-    int flowerC = 0;
-    for (int j = 0; j < flower.redCount; j++) {
-      randomFlower = random.nextInt(4);
-      index2[flowerC++] = randomFlower;
-    }
-    for (int j = 0; j < flower.blueCount; j++) {
-      randomFlower = random.nextInt(4) + 4;
-      index2[flowerC++] = randomFlower;
-    }
-    for (int j = 0; j < flower.purpleCount; j++) {
-      randomFlower = random.nextInt(4) + 8;
-      index2[flowerC++] = randomFlower;
-    }
-    for (int j = 0; j < flower.yellowCount; j++) {
-      randomFlower = random.nextInt(4) + 12;
-      index2[flowerC++] = randomFlower;
-    }
-    for (int j = 0; j < flower.greenCount; j++) {
-      randomFlower = random.nextInt(4) + 16;
-      index2[flowerC++] = randomFlower;
-    }
-    index2.shuffle();
+  }
+  index1.sort();
+  int flowerC = 0;
+  for (int j = 0; j < flower.redCount; j++) {
+    randomFlower = random.nextInt(4);
+    index2[flowerC++] = randomFlower;
+  }
+  for (int j = 0; j < flower.blueCount; j++) {
+    randomFlower = random.nextInt(4) + 4;
+    index2[flowerC++] = randomFlower;
+  }
+  for (int j = 0; j < flower.purpleCount; j++) {
+    randomFlower = random.nextInt(4) + 8;
+    index2[flowerC++] = randomFlower;
+  }
+  for (int j = 0; j < flower.yellowCount; j++) {
+    randomFlower = random.nextInt(4) + 12;
+    index2[flowerC++] = randomFlower;
+  }
+  for (int j = 0; j < flower.greenCount; j++) {
+    randomFlower = random.nextInt(4) + 16;
+    index2[flowerC++] = randomFlower;
+  }
+  index2.shuffle();
 }
 
 final now = new DateTime.now();
@@ -157,7 +152,9 @@ Widget dateTimeImage(BuildContext context) {
   }
   int num = 30;
 
-/*if(now2DFo-nowDFo < 7){
+
+/* 날짜로 카운트 했을 시 - 실제 확인이 불가능하여 주석 처리함.
+  if(now2DFo-nowDFo < 7){
     return Image.asset('assets/sprout.png');
   }else if(now2DFo-nowDFo >= 7){
     return Image.asset('assets/stem1.png');
@@ -167,7 +164,8 @@ Widget dateTimeImage(BuildContext context) {
     return Image.asset('assets/stem3.png');
   }else if(now2DFo-nowDFo >= 30){
     return Image.asset('assets/stem2.png');
-  }*/
+  }
+*/
   if (num < 7) {
     return Image.asset('assets/sprout.png');
   } else if (num < 15) {
@@ -180,15 +178,15 @@ Widget dateTimeImage(BuildContext context) {
     forCountL();
     return Center(
         child: Stack(children: <Widget>[
-      Container(child: Image.asset('assets/stem3.png')),
-      Container(
-        child: GridView.count(
-          crossAxisCount: 10,
-          children: List.generate(60, (i) {
-            return checkRandom(i);
-          }),
-        ),
-      )
-    ]));
+          Container(child: Image.asset('assets/stem3.png')),
+          Container(
+            child: GridView.count(
+              crossAxisCount: 10,
+              children: List.generate(60, (i) {
+                return checkRandom(i);
+              }),
+            ),
+          )
+        ]));
   }
 }

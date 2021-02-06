@@ -87,11 +87,6 @@ class ListPageBody extends StatelessWidget {
             trailing: IconButton(
               icon: Icon(Icons.delete_forever),
               onPressed: () {
-                if(todayDiary.emotion == 'soso') Firestore.instance.collection('flower').document('count').updateData({'greenCount': FieldValue.increment(-1)});
-                else if(todayDiary.emotion == 'good') Firestore.instance.collection('flower').document('count').updateData({'yellowCount': FieldValue.increment(-1)});
-                else if(todayDiary.emotion == 'happy') Firestore.instance.collection('flower').document('count').updateData({'redCount': FieldValue.increment(-1)});
-                else if(todayDiary.emotion == 'sad') Firestore.instance.collection('flower').document('count').updateData({'blueCount': FieldValue.increment(-1)});
-                else Firestore.instance.collection('flower').document('count').updateData({'purpleCount': FieldValue.increment(-1)});
                 Firestore.instance.collection('todayDiary')
                     .document(doc.documentID)
                     .delete();
