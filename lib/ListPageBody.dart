@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'HomePage2.dart';
+
 class TodayDiary {
   var num;
   Timestamp day;
@@ -36,20 +38,29 @@ class ListPageBody extends StatelessWidget {
 
     Widget _buildListWidget(DocumentSnapshot doc) {
       final todayDiary = TodayDiary(doc['num'], doc['day'], doc['diary'], doc['emotion']);
+      var dateString;
 
-      //firestore시간을 String타입으로
-      final Timestamp timestamp = doc.data['day'] as Timestamp;
-      final DateTime dateTime = timestamp.toDate();
-      final dateString = DateFormat('yMMMd').format(dateTime);
+      if(doc['day'] == null) {
+        //시간이 저장되지 않았다면 현재 시간 얻어오기
+        DateTime currentDate = DateTime.now();
+        dateString = DateFormat('yMMMd').format(currentDate);
+      }
+
+      else {
+        //firestore시간을 String타입으로
+        final Timestamp timestamp = doc.data['day'] as Timestamp;
+        final DateTime dateTime = timestamp.toDate();
+        dateString = DateFormat('yMMMd').format(dateTime);
+      }
 
       //카드 위젯을 이용하여 작성한 일기 리스트가 나뉘도록 함
       return Container (
         child: Card(
           color: Colors.white60,
           margin: EdgeInsets.only(
-          left: 30.0, right: 30.0, bottom: 10.0),
+              left: 30.0, right: 30.0, bottom: 10.0),
           shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0)),
+              borderRadius: BorderRadius.circular(8.0)),
           child : ListTile(
             //카드별로 순서지정(왼쪽부터 오른쪽으로) 1.이미지
             contentPadding: EdgeInsets.all(0),
@@ -76,12 +87,17 @@ class ListPageBody extends StatelessWidget {
             trailing: IconButton(
               icon: Icon(Icons.delete_forever),
               onPressed: () {
+                if(todayDiary.emotion == 'soso') Firestore.instance.collection('flower').document('count').updateData({'greenCount': FieldValue.increment(-1)});
+                else if(todayDiary.emotion == 'good') Firestore.instance.collection('flower').document('count').updateData({'yellowCount': FieldValue.increment(-1)});
+                else if(todayDiary.emotion == 'happy') Firestore.instance.collection('flower').document('count').updateData({'redCount': FieldValue.increment(-1)});
+                else if(todayDiary.emotion == 'sad') Firestore.instance.collection('flower').document('count').updateData({'blueCount': FieldValue.increment(-1)});
+                else Firestore.instance.collection('flower').document('count').updateData({'purpleCount': FieldValue.increment(-1)});
                 Firestore.instance.collection('todayDiary')
-                .document(doc.documentID)
-                .delete();
-                },
+                    .document(doc.documentID)
+                    .delete();
+              },
             ),
-           ),
+          ),
         ),
       );
     }
@@ -92,21 +108,21 @@ class ListPageBody extends StatelessWidget {
       //Firestore 연동: 스트림 값이 변경될 때마다 builder부분 다시 호출
       body: StreamBuilder<QuerySnapshot>(
         //날짜 순으로 정렬
-        stream: Firestore.instance.collection("todayDiary")
-            .orderBy('number', descending: true).snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) {
-            return CircularProgressIndicator();
-          }
-          final documents = snapshot.data.documents;
-          //리스트 형식
-          return ListView(
-            shrinkWrap: true,
-            padding: EdgeInsets.only(top: 20.0),
-            children: documents.map((doc) =>
-              _buildListWidget(doc)).toList(),
-          );
-        }),
+          stream: Firestore.instance.collection("todayDiary")
+              .orderBy('number', descending: true).snapshots(),
+          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData) {
+              return CircularProgressIndicator();
+            }
+            final documents = snapshot.data.documents;
+            //리스트 형식
+            return ListView(
+              shrinkWrap: true,
+              padding: EdgeInsets.only(top: 20.0),
+              children: documents.map((doc) =>
+                  _buildListWidget(doc)).toList(),
+            );
+          }),
     );
   }
 }

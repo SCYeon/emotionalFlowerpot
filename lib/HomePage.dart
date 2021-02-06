@@ -1,26 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:emotional_flowerpot/HomePage2.dart';
 import 'package:intl/intl.dart';
 
-//void main() {
-//  runApp(MyApp());
-//}
-
-//class MyApp extends StatelessWidget {
-//  @override
-//  Widget build(BuildContext context) {
-//    return MaterialApp(
-//      title: 'emotional flowerpot',
-//      theme: ThemeData(
-//        primarySwatch: Colors.blueGrey,
-//      ),
-//      home: HomePage(),
-//    );
-//  }
-//}
-
-var count = 0;
+class Date {
+  var date;
+}
 
 class HomePage extends StatefulWidget {
   @override
@@ -46,10 +33,11 @@ class _HomePageState extends State<HomePage> {
           child: Scaffold(
             backgroundColor: Colors.transparent,
             body: Column(
-              children: <Widget>[Expanded(
-                flex: 1,
-                child: SizedBox(),
-              ),
+              children: <Widget>[
+                Expanded(
+                  flex: 1,
+                  child: SizedBox(),
+                ),
                 Container(child: _homeTop()),
                 Expanded(flex: 20, child: _homeMiddle(context)),
                 Expanded(
@@ -69,8 +57,10 @@ class _HomePageState extends State<HomePage> {
 }
 
 Widget _homeTop() {
+  var formatterT = new DateFormat('MM/dd');
   var now3 = new DateTime.now();
   var now3Fo = formatterT.format(now3);
+
   return Center(
     child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -88,7 +78,8 @@ Widget _homeTop() {
                     builder: (context, constraint) {
                       return AutoSizeText(
                         now3Fo,
-                        style: TextStyle(fontSize: 25), //minimum font size
+                        style: TextStyle(fontSize: 25),
+                        //minimum font size
                         minFontSize: 10,
                         stepGranularity: 10,
                         maxLines: 4,
@@ -129,7 +120,7 @@ Widget _homeMiddle(BuildContext context) {
             // Use AspectRatio to emulate an image
             child: AspectRatio(
               aspectRatio: 1.25,
-              child: _dateTimeImage(),
+              child: dateTimeImage(context),
             ),
           ),
         ],
@@ -227,68 +218,6 @@ Widget _homeBottom(BuildContext context) {
       ],
     ),
   );
-}
-
-var formatterT = new DateFormat('MM/dd');
-
-final now = new DateTime.now();
-String formatter = DateFormat('y').format(now);
-int nowYFo = int.parse(formatter);
-String formatter2 = DateFormat('M').format(now);
-int nowMFo = int.parse(formatter2);
-String formatter3 = DateFormat('D').format(now);
-int nowDFo = int.parse(formatter3);
-
-//final sevenDays = now.add(new Duration(days: 7));
-//int sevenFo = int.parse(formatter.format(sevenDays));
-
-//final fifteenDays = now.add(new Duration(days: 15));
-//int fifteenFo = int.parse(formatter.format(fifteenDays));
-
-//final twentyTwoDays = now.add(new Duration(days: 22));
-//int twentyFo = int.parse(formatter.format(twentyTwoDays));
-
-//final thirtyDays = now.add(new Duration(days: 30));
-//int thirtyFo = int.parse(formatter.format(thirtyDays));
-
-Widget _dateTimeImage() {
-  var now2 = new DateTime.now();
-  formatter = DateFormat('y').format(now2);
-  int now2YFo = int.parse(formatter);
-  formatter = DateFormat('M').format(now2);
-  int now2MFo = int.parse(formatter);
-  formatter = DateFormat('d').format(now2);
-  int now2DFo = int.parse(formatter);
-
-  if (now2YFo - nowYFo > 0) {
-    now2MFo += 12;
-  }
-  if (now2MFo - now2MFo > 0) {
-    now2DFo += 30;
-  }
-  int num = 2;
-  /*if(now2DFo-nowDFo < 7){
-    return Image.asset('assets/sprout.png');
-  }else if(now2DFo-nowDFo >= 7){
-    return Image.asset('assets/stem1.png');
-  }else if(now2DFo-nowDFo >= 15){
-    return Image.asset('assets/stem2.png');
-  }else if(now2DFo-nowDFo >= 22){
-    return Image.asset('assets/stem3.png');
-  }else if(now2DFo-nowDFo >= 30){
-    return Image.asset('assets/stem2.png');
-  }*/
-  if (num < 7) {
-    return Image.asset('assets/sprout.png');
-  } else if (num < 15) {
-    return Image.asset('assets/stem1.png');
-  } else if (num < 22) {
-    return Image.asset('assets/stem2.png');
-  } else if (num < 30) {
-    return Image.asset('assets/stem3.png');
-  } else if (num == 30) {
-    return Image.asset('assets/stem3.png');
-  }
 }
 
 enum _Slot {

@@ -1,3 +1,5 @@
+import 'package:emotional_flowerpot/HomePage2.dart';
+import 'package:emotional_flowerpot/HomePage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -159,8 +161,16 @@ class _WritingPageState extends State<WritingPage> {
   }
 
   void _addToday(Diary today){
+    //감정 카운트
     //firesotre에 저장
     Firestore.instance.collection('todayDiary').add({'number':today.num, 'day':today.day, 'emotion': today.emotion, 'diary': today.diary});
+
+    if(today.emotion == 'soso') Firestore.instance.collection('flower').document('count').updateData({'greenCount': FieldValue.increment(1)});
+    else if(today.emotion == 'good') Firestore.instance.collection('flower').document('count').updateData({'yellowCount': FieldValue.increment(1)});
+    else if(today.emotion == 'happy') Firestore.instance.collection('flower').document('count').updateData({'redCount': FieldValue.increment(1)});
+    else if(today.emotion == 'sad') Firestore.instance.collection('flower').document('count').updateData({'blueCount': FieldValue.increment(1)});
+    else Firestore.instance.collection('flower').document('count').updateData({'purpleCount': FieldValue.increment(1)});
+
     //저장 후 화면 리셋
     _todayController.text = ' ';
     _selectedTime = null;

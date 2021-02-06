@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:emotional_flowerpot/ListPageBody.dart';
-import 'package:emotional_flowerpot/HomePage.dart';
+import 'ListPageBody.dart';
+import 'Homepage.dart';
 
 void main() {
   runApp(MyList());
